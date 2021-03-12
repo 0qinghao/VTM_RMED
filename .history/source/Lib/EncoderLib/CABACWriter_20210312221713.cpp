@@ -2748,6 +2748,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
     // m_pcBinIf->encodeBin(0b0, baseCoeffProcessCtx[uiWidth != 4]);
     coeffToBeEnc = coeff;
   }
+  //   std::cout << tu.blocks[compID].width << "x" << tu.blocks[compID].height << std::endl;
 
   // determine and set last coeff position and sig group flags
   int                      scanPosLast = -1;

@@ -2698,15 +2698,15 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
       amp_hevc += abs(coeff[k * uiWidth + l]);
     }
   }
-  for (l = 0; l < uiWidth; l++)
-  {
-    coeffReLT[l] = coeff[l];
-  }
-  for (k = 1; k < uiHeight; k++)
+  for (k = 0; k < uiHeight; k++)
   {
     coeffReLT[k * uiWidth] = coeff[k * uiWidth];
   }
-  for (k = 1; k < uiHeight; k++)
+  for (l = 1; l < uiWidth; l++)
+  {
+    coeffReLT[l]           = coeff[l];
+  }
+  for (k = 1; k < uiWidth; k++)
   {
     for (l = 1; l < uiWidth; l++)
     {
@@ -2727,27 +2727,15 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
       }
     }
   }
-  for (k = 1; k < uiHeight; k++)
+  for (k = 1; k < uiWidth; k++)
   {
     for (l = 1; l < uiWidth; l++)
     {
+      // energy_LT += pow(coeffReLT[k * uiWidth + l], 2);
       amp_LT += abs(coeffReLT[k * uiWidth + l]);
     }
   }
-  //  ContextModel *const baseCoeffProcessCtx = m_cCUCoeffProcessSCModel.get(0, eTType == TEXT_LUMA ? 0 : 1);
-  const TCoeff *coeffToBeEnc;
-  if (amp_LT - amp_hevc < 0)
-  {
-    m_BinEncoder.encodeBinEP(0b1);
-    // m_pcBinIf->encodeBin(0b1, baseCoeffProcessCtx[uiWidth != 4]);
-    coeffToBeEnc = coeffReLT;
-  }
-  else
-  {
-    m_BinEncoder.encodeBinEP(0b0);
-    // m_pcBinIf->encodeBin(0b0, baseCoeffProcessCtx[uiWidth != 4]);
-    coeffToBeEnc = coeff;
-  }
+  std::cout << tu.blocks[compID].width << "x" << tu.blocks[compID].height << std::endl;
 
   // determine and set last coeff position and sig group flags
   int                      scanPosLast = -1;
@@ -2755,8 +2743,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
   for (int scanPos = 0; scanPos < cctx.maxNumCoeff(); scanPos++)
   {
     unsigned blkPos = cctx.blockPos(scanPos);
-    // if (coeff[blkPos])
-    if (coeffToBeEnc[blkPos])
+    if (coeff[blkPos])
     {
       scanPosLast = scanPos;
       sigGroupFlags.set(scanPos >> cctx.log2CGSize());
@@ -2807,8 +2794,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
         continue;
       }
     }
-    // residual_coding_subblock(cctx, coeff, stateTab, state);
-    residual_coding_subblock(cctx, coeffToBeEnc, stateTab, state);
+    residual_coding_subblock(cctx, coeff, stateTab, state);
 
     if (cuCtx && isLuma(compID) && cctx.isSigGroup() && (cctx.cgPosY() > 3 || cctx.cgPosX() > 3))
     {

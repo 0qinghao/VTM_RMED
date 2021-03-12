@@ -2686,68 +2686,19 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
   const TCoeff *     coeff = tu.getCoeffs(compID).buf;
 
   // CoeffProcess
-  uint   uiWidth  = tu.blocks[compID].width;
-  uint   uiHeight = tu.blocks[compID].height;
+  uint uiWidth = tu.blocks[compID].width;
+  uint uiHeight = tu.blocks[compID].height;
   int    k, l;
-  double amp_hevc = 0, amp_LT = 0;
+  double amp_hevc = 0, amp_LT=0;
   TCoeff coeffReLT[uiHeight * uiWidth];
-  for (k = 1; k < uiHeight; k++)
-  {
-    for (l = 1; l < uiWidth; l++)
+    for (k = 1; k < uiWidth; k++)
     {
-      amp_hevc += abs(coeff[k * uiWidth + l]);
+        for (l = 1; l < uiWidth; l++)
+        {
+            amp_hevc += abs(coeff[k * uiWidth + l]);
+        }
     }
-  }
-  for (l = 0; l < uiWidth; l++)
-  {
-    coeffReLT[l] = coeff[l];
-  }
-  for (k = 1; k < uiHeight; k++)
-  {
-    coeffReLT[k * uiWidth] = coeff[k * uiWidth];
-  }
-  for (k = 1; k < uiHeight; k++)
-  {
-    for (l = 1; l < uiWidth; l++)
-    {
-      TCoeff left    = coeff[k * uiWidth - 1 + l];
-      TCoeff top     = coeff[(k - 1) * uiWidth + l];
-      TCoeff lefttop = coeff[(k - 1) * uiWidth - 1 + l];
-      if (lefttop >= max(left, top))
-      {
-        coeffReLT[k * uiWidth + l] = min(left, top) - coeff[k * uiWidth + l];
-      }
-      else if (lefttop <= min(left, top))
-      {
-        coeffReLT[k * uiWidth + l] = max(left, top) - coeff[k * uiWidth + l];
-      }
-      else
-      {
-        coeffReLT[k * uiWidth + l] = left + top - lefttop - coeff[k * uiWidth + l];
-      }
-    }
-  }
-  for (k = 1; k < uiHeight; k++)
-  {
-    for (l = 1; l < uiWidth; l++)
-    {
-      amp_LT += abs(coeffReLT[k * uiWidth + l]);
-    }
-  }
-  //  ContextModel *const baseCoeffProcessCtx = m_cCUCoeffProcessSCModel.get(0, eTType == TEXT_LUMA ? 0 : 1);
-  const TCoeff *coeffToBeEnc;
-  if (amp_LT - amp_hevc < 0)
-  {
-    m_BinEncoder.encodeBinEP(0b1);
-    // m_pcBinIf->encodeBin(0b1, baseCoeffProcessCtx[uiWidth != 4]);
-    coeffToBeEnc = coeffReLT;
-  }
-  else
-  {
-    m_BinEncoder.encodeBinEP(0b0);
-    // m_pcBinIf->encodeBin(0b0, baseCoeffProcessCtx[uiWidth != 4]);
-    coeffToBeEnc = coeff;
-  }
+  std::cout << tu.blocks[compID].width << "x" << tu.blocks[compID].height << std::endl;
 
   // determine and set last coeff position and sig group flags
   int                      scanPosLast = -1;
@@ -2755,8 +2706,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
   for (int scanPos = 0; scanPos < cctx.maxNumCoeff(); scanPos++)
   {
     unsigned blkPos = cctx.blockPos(scanPos);
-    // if (coeff[blkPos])
-    if (coeffToBeEnc[blkPos])
+    if (coeff[blkPos])
     {
       scanPosLast = scanPos;
       sigGroupFlags.set(scanPos >> cctx.log2CGSize());
@@ -2807,8 +2757,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
         continue;
       }
     }
-    // residual_coding_subblock(cctx, coeff, stateTab, state);
-    residual_coding_subblock(cctx, coeffToBeEnc, stateTab, state);
+    residual_coding_subblock(cctx, coeff, stateTab, state);
 
     if (cuCtx && isLuma(compID) && cctx.isSigGroup() && (cctx.cgPosY() > 3 || cctx.cgPosX() > 3))
     {

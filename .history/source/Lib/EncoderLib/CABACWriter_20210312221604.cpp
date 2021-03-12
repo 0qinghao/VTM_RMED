@@ -2748,6 +2748,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
     // m_pcBinIf->encodeBin(0b0, baseCoeffProcessCtx[uiWidth != 4]);
     coeffToBeEnc = coeff;
   }
+  //   std::cout << tu.blocks[compID].width << "x" << tu.blocks[compID].height << std::endl;
 
   // determine and set last coeff position and sig group flags
   int                      scanPosLast = -1;
@@ -2755,8 +2756,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
   for (int scanPos = 0; scanPos < cctx.maxNumCoeff(); scanPos++)
   {
     unsigned blkPos = cctx.blockPos(scanPos);
-    // if (coeff[blkPos])
-    if (coeffToBeEnc[blkPos])
+    if (coeff[blkPos])
     {
       scanPosLast = scanPos;
       sigGroupFlags.set(scanPos >> cctx.log2CGSize());
@@ -2807,8 +2807,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
         continue;
       }
     }
-    // residual_coding_subblock(cctx, coeff, stateTab, state);
-    residual_coding_subblock(cctx, coeffToBeEnc, stateTab, state);
+    residual_coding_subblock(cctx, coeff, stateTab, state);
 
     if (cuCtx && isLuma(compID) && cctx.isSigGroup() && (cctx.cgPosY() > 3 || cctx.cgPosX() > 3))
     {

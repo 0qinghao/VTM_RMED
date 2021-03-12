@@ -2736,18 +2736,18 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
   }
   //  ContextModel *const baseCoeffProcessCtx = m_cCUCoeffProcessSCModel.get(0, eTType == TEXT_LUMA ? 0 : 1);
   const TCoeff *coeffToBeEnc;
-  if (amp_LT - amp_hevc < 0)
+//   if (amp_LT - amp_hevc < 0)
   {
-    m_BinEncoder.encodeBinEP(0b1);
+    // m_BinEncoder.encodeBinEP(0b1);
     // m_pcBinIf->encodeBin(0b1, baseCoeffProcessCtx[uiWidth != 4]);
     coeffToBeEnc = coeffReLT;
   }
-  else
-  {
-    m_BinEncoder.encodeBinEP(0b0);
-    // m_pcBinIf->encodeBin(0b0, baseCoeffProcessCtx[uiWidth != 4]);
-    coeffToBeEnc = coeff;
-  }
+//   else
+//   {
+//     m_BinEncoder.encodeBinEP(0b0);
+//     // m_pcBinIf->encodeBin(0b0, baseCoeffProcessCtx[uiWidth != 4]);
+//     coeffToBeEnc = coeff;
+//   }
 
   // determine and set last coeff position and sig group flags
   int                      scanPosLast = -1;
