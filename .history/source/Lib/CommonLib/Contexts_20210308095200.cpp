@@ -475,23 +475,6 @@ const CtxSet ContextSetCfg::SigCoeffGroup[] =
     {   5,   8, },
   })
 };
-const CtxSet ContextSetCfg::CoeffProcessGroup[] =
-{
-  ContextSetCfg::addCtxSet
-  ({
-    {  25,  45, },
-    {  25,  30, },
-    {  18,  31, },
-    {   8,   5, },
-  }),
-  ContextSetCfg::addCtxSet
-  ({
-    {  25,  14, },
-    {  25,  45, },
-    {  25,  15, },
-    {   5,   8, },
-  })
-};
 
 const CtxSet ContextSetCfg::SigFlag[] =
 {

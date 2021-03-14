@@ -227,7 +227,6 @@ public:
   static const CtxSet   ACTFlag;
   static const CtxSet   QtCbf           [3];    // [ channel ]
   static const CtxSet   SigCoeffGroup   [2];    // [ ChannelType ]
-  static const CtxSet   CoeffProcessGroup   [2];    // [ ChannelType ]
   static const CtxSet   LastX           [2];    // [ ChannelType ]
   static const CtxSet   LastY           [2];    // [ ChannelType ]
   static const CtxSet   SigFlag         [6];    // [ ChannelType + State ]

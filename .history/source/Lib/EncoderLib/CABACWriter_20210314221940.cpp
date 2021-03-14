@@ -2734,14 +2734,18 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
       amp_LT += abs(coeffReLT[k * uiWidth + l]);
     }
   }
-
+  //  ContextModel *const baseCoeffProcessCtx = m_cCUCoeffProcessSCModel.get(0, eTType == TEXT_LUMA ? 0 : 1);
   const TCoeff *coeffToBeEnc;
   if (amp_LT - amp_hevc < 0)
   {
+    // m_BinEncoder.encodeBinEP(0b1);
+    m_BinEncoder.encodeBin(1, cctx.sigGroupCtxId());
     coeffToBeEnc = coeffReLT;
   }
   else
   {
+    // m_BinEncoder.encodeBinEP(0b0);
+    m_BinEncoder.encodeBin(0, cctx.sigGroupCtxId());
     coeffToBeEnc = coeff;
   }
 
@@ -2810,15 +2814,6 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
     {
       cuCtx->violatesMtsCoeffConstraint = true;
     }
-  }
-
-  if (amp_LT - amp_hevc < 0)
-  {
-    m_BinEncoder.encodeBin(1, cctx.CoeffProcessCtxId());
-  }
-  else
-  {
-    m_BinEncoder.encodeBin(0, cctx.CoeffProcessCtxId());
   }
 }
 

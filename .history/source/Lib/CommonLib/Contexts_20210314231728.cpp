@@ -479,10 +479,10 @@ const CtxSet ContextSetCfg::CoeffProcessGroup[] =
 {
   ContextSetCfg::addCtxSet
   ({
-    {  25,  45, },
-    {  25,  30, },
-    {  18,  31, },
-    {   8,   5, },
+    {  30,  50, },
+    {  25,  35, },
+    {  23,  36, },
+    {   13,   10, },
   }),
   ContextSetCfg::addCtxSet
   ({

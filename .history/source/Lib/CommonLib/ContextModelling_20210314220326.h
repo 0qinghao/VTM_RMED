@@ -400,7 +400,6 @@ private:
   int                       m_minSubPos;
   int                       m_maxSubPos;
   unsigned                  m_sigGroupCtxId;
-  unsigned                  m_CoeffProcessCtxId;
   TCoeff                    m_tmplCpSum1;
   int                       m_tmplCpDiag;
   CtxSet                    m_sigFlagCtxSet[3];

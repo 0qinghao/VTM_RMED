@@ -2738,10 +2738,14 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
   const TCoeff *coeffToBeEnc;
   if (amp_LT - amp_hevc < 0)
   {
+    // m_BinEncoder.encodeBinEP(0b1);
+    // m_BinEncoder.encodeBin(1, cctx.CoeffProcessCtxId());
     coeffToBeEnc = coeffReLT;
   }
   else
   {
+    // m_BinEncoder.encodeBinEP(0b0);
+    // m_BinEncoder.encodeBin(0, cctx.CoeffProcessCtxId());
     coeffToBeEnc = coeff;
   }
 
@@ -2760,6 +2764,7 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
   }
   CHECK(scanPosLast < 0, "Coefficient coding called for empty TU");
   cctx.setScanPosLast(scanPosLast);
+    m_BinEncoder.encodeBin(1, cctx.CoeffProcessCtxId());
 
   if (cuCtx && tu.mtsIdx[compID] != MTS_SKIP && tu.blocks[compID].height >= 4 && tu.blocks[compID].width >= 4)
   {
@@ -2810,15 +2815,6 @@ void CABACWriter::residual_coding(const TransformUnit &tu, ComponentID compID, C
     {
       cuCtx->violatesMtsCoeffConstraint = true;
     }
-  }
-
-  if (amp_LT - amp_hevc < 0)
-  {
-    m_BinEncoder.encodeBin(1, cctx.CoeffProcessCtxId());
-  }
-  else
-  {
-    m_BinEncoder.encodeBin(0, cctx.CoeffProcessCtxId());
   }
 }
 

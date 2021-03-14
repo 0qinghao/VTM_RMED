@@ -34,7 +34,7 @@
 /** \file     CABACReader.cpp
  *  \brief    Reader for low level syntax
  */
-
+#include "math.h"
 #include "CABACReader.h"
 
 #include "CommonLib/CodingStructure.h"
